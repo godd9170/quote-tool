@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title></title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+  <style>
+    /*Styles*/
+  </style>
+</head>
+
+<body class="container">
+  <h1>Get a quote</h1>
+  <form id="quote-form">
+    <div class="form-group">
+      <label for="province">Province</label>
+      <div class="input-group">
+        <select id="select-province" name="province">
+          <option value="AB">Alberta</option>
+          <option value="BC">British Columbia</option>
+          <option value="MB">Manitoba</option>
+          <option value="NB">New Brunswick</option>
+          <option value="NL">Newfoundland and Labrador</option>
+          <option value="NS">Nova Scotia</option>
+          <option value="ON">Ontario</option>
+          <option value="PE">Prince Edward Island</option>
+          <option value="QC">Quebec</option>
+          <option value="SK">Saskatchewan</option>
+          <option value="NT">Northwest Territories</option>
+          <option value="NU">Nunavut</option>
+          <option value="YT">Yukon</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="class-code">Class</label>
+      <div class="input-group">
+        <select id="select-class-code" name="class-code">
+          <option value="736">Tree removal, trimming, pruning (no logging or weed spraying)</option>
+          <option value="1521">Paving contractor - driveway, parking lot, sidewalk</option>
+          <option value="1526">Grading of land (not road construction or excavation)</option>
+          <option value="1720">Water softening equipment installation (excluding treatment)</option>
+          <option value="1752">Cabinet installation</option>
+          <option value="1754">Painting & paper hanging including interior spray painting (no exterior spray painting)</option>
+          <option value="1756">Acoustic ceiling installation (excluding UFFI, asbestos, mould remediation)</option>
+          <option value="1766">Window installation</option>
+          <option value="7395">Carpet, drapery, furniture cleaning</option>
+          <option value="8912">Land surveyor (no aerial surveyors)</option>
+          <option value="1711B">Plumbing - residential & commercial (no sprinkler, boiler or industrial work)</option>
+          <option value="1715A">Duct cleaning - residential only</option>
+          <option value="1715A">Heating & A/C contractor - oil or gas - residential & commercial, with industrial work up to max 20%</option>
+          <option value="1719B">Solar energy contractor - residential & commercial</option>
+          <option value="1731B">Electrical wiring contractor - residential & commercial (no alarm installation or industrial work)</option>
+          <option value="1774A">Excavation contractor - no blasting or demolition</option>
+          <option value="1811B">Handyman / General labourer - light repair, maintenance & interior renovations (excluding work typically requiring
+            trade licences, structural renovations & additions).</option>
+          <option value="735A">Gardening, landscaping (no snow removal, weed spraying or tree removal)</option>
+          <option value="7392A">Window cleaning (not over 5 storeys)</option>
+          <option value="7693A">Locksmith (no alarm installation)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="business-contents-limit">Business Contents Limit</label>
+      <div class="input-group">
+        <select id="select-business-contents-limit" name="business-contents-limit">
+          <option value="0">0</option>
+          <option value="10000">10,000</option>
+          <option value="20000">20,000</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="general-liability-limit">General Liability Limit</label>
+      <div class="input-group">
+        <select id="select-general-liability-limit" name="general-liability-limit">
+          <option value="2 Million">2 Million</option>
+          <option value="3 Million">3 Million</option>
+          <option value="4 Million">4 Million</option>
+          <option value="5 Million">5 Million</option>
+        </select>
+      </div>
+    </div>
+  </form>
+  <button onclick="getIt()">get it</button>
+  <span id="premium"></span>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').select2(); //make all the select searchable
+    });
+  </script>
+  <script>
+    const commercialRaterValues = [
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 5.185,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 5.412,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 5.503,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 5.64,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 2.044,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 2.134,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 2.17,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 2.223,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.013,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.189,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.259,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.365,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.264,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.451,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.525,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.638,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.389,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.582,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.659,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.774,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 6.207,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 6.48,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 6.588,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 6.752,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.627,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.655,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.666,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 0.682,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.505,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.571,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.597,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.637,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.254,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.309,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.331,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.364,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.505,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.571,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.597,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.637,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.941,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.982,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.998,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.023,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.417,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.479,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.504,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.541,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 5.907,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 6.167,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 6.27,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 6.426,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 3.997,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.172,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.243,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.348,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 2.985,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 3.115,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 3.168,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 3.246,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.389,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.582,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.659,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.774,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 3.036,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 3.169,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 3.222,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 3.302,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.752,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.785,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.799,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 0.818,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.254,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.309,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.331,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "0",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.364,
+        "additivePremium": 63,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 5.185,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 5.412,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 5.503,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 5.64,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 2.044,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 2.134,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 2.17,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 2.223,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.013,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.189,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.259,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.365,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.264,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.451,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.525,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.638,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.389,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.582,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.659,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.774,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 6.207,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 6.48,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 6.588,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 6.752,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.627,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.655,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.666,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 0.682,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.505,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.571,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.597,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.637,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.254,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.309,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.331,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.364,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.505,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.571,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.597,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.637,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.941,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.982,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.998,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.023,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.417,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.479,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.504,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.541,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 5.907,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 6.167,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 6.27,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 6.426,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 3.997,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.172,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.243,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.348,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 2.985,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 3.115,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 3.168,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 3.246,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.389,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.582,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.659,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.774,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 3.036,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 3.169,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 3.222,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 3.302,
+        "additivePremium": 97,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.752,
+        "additivePremium": 87,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.785,
+        "additivePremium": 87,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.799,
+        "additivePremium": 87,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 0.818,
+        "additivePremium": 87,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.254,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.309,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.331,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "10000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.364,
+        "additivePremium": 82,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 5.185,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 5.412,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 5.503,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "736",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 5.64,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 2.044,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 2.134,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 2.17,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1521",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 2.223,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.013,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.189,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.259,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1526",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.365,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.264,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.451,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.525,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1711B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.638,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.389,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.582,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.659,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1715A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.774,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 6.207,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 6.48,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 6.588,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1719B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 6.752,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.627,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.655,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.666,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1720",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 0.682,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.505,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.571,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.597,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1731B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.637,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.254,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.309,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.331,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1752",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.364,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.505,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.571,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.597,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1754",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.637,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.941,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.982,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.998,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1756",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.023,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.417,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.479,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.504,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1766",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.541,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 5.907,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 6.167,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 6.27,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1774A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 6.426,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 3.997,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.172,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.243,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "1811B",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.348,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 2.985,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 3.115,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 3.168,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "735A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 3.246,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 4.389,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 4.582,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 4.659,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7392A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 4.774,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 3.036,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 3.169,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 3.222,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7395",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 3.302,
+        "additivePremium": 132,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 0.752,
+        "additivePremium": 111,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 0.785,
+        "additivePremium": 111,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 0.799,
+        "additivePremium": 111,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "7693A",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 0.818,
+        "additivePremium": 111,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "2 Million",
+        "liabilityMinimum": 500,
+        "liabilityRate": 1.254,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "3 Million",
+        "liabilityMinimum": 600,
+        "liabilityRate": 1.309,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "4 Million",
+        "liabilityMinimum": 700,
+        "liabilityRate": 1.331,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      },
+      {
+        "classCode": "8912",
+        "province": "ON",
+        "businessContentsLimit": "20000",
+        "generalLiabilityLimit": "5 Million",
+        "liabilityMinimum": 800,
+        "liabilityRate": 1.364,
+        "additivePremium": 101,
+        "policyMinimum": 750
+      }
+    ]
+    const RATING_BASIS = 'Revenue';
+    const RATING_BASIS_VALUE = 1000000;
+    const DIVIDER = 1000;
+
+    function getIt() {
+      const province = $('#select-province').val();
+      const classCode = $('#select-class-code').val();
+      const businessContentsLimit = $('#select-business-contents-limit').val();
+      const generalLiabilityLimit = $('#select-general-liability-limit').val();
+
+      //find the rate
+      const rate = commercialRaterValues.find(function (rate) {
+        return rate.province == province && rate.classCode == classCode && rate.businessContentsLimit == businessContentsLimit && rate.generalLiabilityLimit == generalLiabilityLimit;
+      })
+
+      var premium = 'No match'
+      if (!!rate) {
+        const val = Math.max(rate.policyMinimum, rate.additivePremium + Math.max((rate.liabilityRate * RATING_BASIS_VALUE) / DIVIDER, rate.liabilityMinimum))
+        premium = val.toLocaleString('en-CA', { style: 'currency', currency: 'CAD' })
+      }
+
+      $('#premium').text(premium);
+    }
+  </script>
+</body>
+
+</html>
